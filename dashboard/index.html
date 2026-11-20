@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Launch Radar — which pre-token protocol to farm next</title>
+<link rel="stylesheet" href="radar.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Token Launch Radar</h1>
+    <p class="tag">Which pre-token protocol is worth farming next — and what to do about it.</p>
+  </div>
+  <div class="meta" id="meta">Loading the sealed snapshot…</div>
+</header>
+
+<section class="hero" id="hero" aria-label="Farm next">
+  <div class="hero-label">Farm next</div>
+  <h2 id="hero-name">—</h2>
+  <p id="hero-line">—</p>
+  <div class="hero-stats" id="hero-stats"></div>
+  <button id="hero-open" type="button">See the farm plan →</button>
+</section>
+
+<section class="controls" aria-label="Filter and sort the board">
+  <label>Search <input id="q" type="search" placeholder="Protocol name or slug…" autocomplete="off"></label>
+  <label>Category <select id="cat"><option value="">All categories</option></select></label>
+  <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+  <label>Scope <select id="scope">
+    <option value="all">Whole board</option>
+    <option value="watchlist">Watchlist only ($50M+ TVL)</option>
+    <option value="early">Early finds (below the floor)</option>
+  </select></label>
+  <label>Sort by <select id="sort">
+    <option value="implied">Implied value</option>
+    <option value="tvl">TVL</option>
+    <option value="growth">7-day growth</option>
+    <option value="age">Age (oldest first)</option>
+  </select></label>
+  <div class="count" id="count"></div>
+</section>
+
+<main>
+  <table id="board" aria-label="Ranked board of pre-token protocols">
+    <thead><tr>
+      <th>#</th><th>Protocol</th><th>Category</th><th>Chains</th>
+      <th class="num">TVL</th><th class="num">7d</th><th class="num">Age</th>
+      <th class="num">Implied value</th><th></th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <p class="hint">Click a row to open its farm plan and value breakdown. Implied values are this radar's own claim, from the snapshot's figures — never a promise that a token is coming.</p>
+</main>
+
+<aside id="detail" class="detail" aria-label="Protocol detail" hidden>
+  <button id="detail-close" type="button" aria-label="Close detail">✕</button>
+  <div id="detail-body"></div>
+</aside>
+
+<section class="live" id="live-sec">
+  <h2>Already trading — shown at market value, never ranked</h2>
+  <p>These protocols already have a token, so the board keeps them apart: their value is the market's own number, not a model's. A farmer chasing a launch should not confuse them with the pre-token board above.</p>
+  <table aria-label="Live-token protocols by market cap">
+    <thead><tr><th>Protocol</th><th>Category</th><th class="num">TVL</th><th class="num">Market cap</th><th class="num">7d</th></tr></thead>
+    <tbody id="live-rows"></tbody>
+  </table>
+</section>
+
+<section class="model">
+  <h2>How the value is figured</h2>
+  <p><strong>implied = TVL × category multiple × growth × maturity × breadth</strong></p>
+  <ul>
+    <li><strong>Category multiple</strong> — the median market-cap / TVL of the live-token protocols in the same category, measured from this snapshot (clamped 0.05–1.5; thin categories use the global median). A lending protocol is priced like lending protocols that already trade, not like a bridge.</li>
+    <li><strong>Growth</strong> — 1 + (7-day TVL change, clamped −50%…+150%) × 0.6. A protocol growing fast is worth more than one shrinking at the same size.</li>
+    <li><strong>Maturity</strong> — 0.7 + age/1095 × 0.3 (0.85 when no listing date is recorded). A protocol that ran three years with no token has a longer record behind the same TVL.</li>
+    <li><strong>Breadth</strong> — 1 + 0.05 × (chains − 1, capped at 4). More chains, more farmers reached.</li>
+  </ul>
+  <p>Every row is scored by the same formula — no protocol name is ever special-cased. The watchlist ($50M+ TVL, no token recorded) is the floor, never the ceiling: the board also ranks the early finds below it.</p>
+</section>
+
+<footer>
+  <p>Data: DefiLlama protocols snapshot, sealed for this bounty — <span id="src"></span>. Model <span id="mver"></span>.</p>
+  <p>Built with superbot.gg — a free model client that runs on your own computer and keeps the sessions an entry is built from.</p>
+  <p>Not financial advice. An implied value is a ranking claim, not a price, and a protocol on this board may never issue a token.</p>
+</footer>
+
+<noscript><p class="noscript">This radar needs JavaScript: the board renders from the snapshot data beside the page.</p></noscript>
+<script src="../data.js"></script>
+<script src="radar.js"></script>
+</body>
+</html>
